@@ -1,0 +1,92 @@
+# Build directories
+build/
+cmake_build/
+install/
+dist/
+bin/
+lib/
+obj/
+
+# Compiled objects and libraries
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe
+
+# CMake generated files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.cmake
+CTestTestfile.cmake
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+
+# IDE specific files
+.clang-format
+.editorconfig
+
+# Log files
+*.log
+bank_system.log
+logs/
+
+# Database and backup files
+*.db
+*.backup
+*.bak
+*.sql
+
+# Temporary files
+*.tmp
+*.temp
+*.orig
+*.rej
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Node/npm
+node_modules/
+package-lock.json
+npm-debug.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS specific
+Thumbs.db
+.directory
+*.swp
+*.bak
+
+# Security
+credentials/
+secrets/
+*.pem
+*.key
