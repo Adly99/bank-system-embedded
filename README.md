@@ -1,10 +1,10 @@
 # Bank System - Embedded C++ Project
 
-A comprehensive embedded C++ banking system designed for QNX RTOS and ARM platforms with CMake build support.
+A comprehensive embedded C++ banking system with cross-platform support and CMake build configuration.
 
 ## Project Overview
 
-This is an enterprise-grade banking system implementation in C++ targeting embedded systems, particularly QNX RTOS on ARM architecture. It includes:
+This is an enterprise-grade banking system implementation in C++ targeting embedded and desktop systems with cross-platform compatibility. It includes:
 
 - **Account Management**: SAVINGS, CHECKING, and INVESTMENT account types
 - **Customer Management**: Individual, Corporate, and VIP customer types
@@ -18,7 +18,6 @@ This is an enterprise-grade banking system implementation in C++ targeting embed
 ```
 bank-system-embedded/
 ├── CMakeLists.txt
-├── toolchain_qnx_arm.cmake
 ├── build.cmd
 ├── README.md
 ├── include/
@@ -55,12 +54,12 @@ bank-system-embedded/
 ### System Requirements
 - C++17 compatible compiler
 - CMake 3.10 or higher
-- ARM cross-compilation toolchain (for QNX builds)
+- Standard C++ library with STL support
 
 ### Build Requirements
-- **Windows**: Visual Studio 2019 or higher
-- **Linux/Unix**: GCC/Clang with ARM toolchain
-- **QNX**: QNX 7.0 or higher with ARM support
+- **Windows**: Visual Studio 2019 or higher, or MinGW with GCC
+- **Linux/Unix**: GCC/Clang 7.0 or higher
+- **macOS**: Clang with Xcode Command Line Tools
 
 ## Building the Project
 
@@ -76,16 +75,10 @@ build.cmd
 build.cmd --debug
 ```
 
-### QNX Cross-Compilation
-
-```bash
-build.cmd --qnx
-```
-
 ### Full Clean Rebuild
 
 ```bash
-build.cmd --clean --qnx
+build.cmd --clean
 ```
 
 ### Manual CMake Build (Windows)
@@ -97,7 +90,7 @@ cmake ..
 cmake --build . --config Release
 ```
 
-### Manual CMake Build (Linux/Unix)
+### Manual CMake Build (Linux/Unix/macOS)
 
 ```bash
 mkdir build
@@ -106,25 +99,28 @@ cmake ..
 make
 ```
 
-### Manual CMake Build (QNX Cross-Compile)
+### Platform-Specific Build Flags
+
+You can customize builds by passing CMake options:
 
 ```bash
-mkdir build
-cd build
-cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain_qnx_arm.cmake ..
-make
+# Set build type
+cmake -DCMAKE_BUILD_TYPE=Release ..
+
+# Specify output directory
+cmake -DCMAKE_INSTALL_PREFIX=/custom/path ..
 ```
 
 ## Build Output
 
 After successful build:
-- **Executable**: `build/bin/bank_system_embedded` (Linux/Unix) or `build\bin\bank_system_embedded.exe` (Windows)
+- **Executable**: `build/bin/bank_system_embedded` (Linux/Unix/macOS) or `build\bin\bank_system_embedded.exe` (Windows)
 - **Log Files**: `bank_system.log` (generated at runtime)
 - **Install Directory**: `install/` (after running cmake install)
 
 ## Running the Application
 
-### Linux/Unix/QNX
+### Linux/Unix/macOS
 ```bash
 ./build/bin/bank_system_embedded
 ```
@@ -167,7 +163,6 @@ build\bin\bank_system_embedded.exe
 - ✅ Database backup/restore
 - ✅ System status monitoring
 - ✅ Cross-platform compatibility
-- ✅ Embedded system optimization
 
 ## Class Architecture
 
@@ -185,22 +180,6 @@ build\bin\bank_system_embedded.exe
 ### Utilities Module (`utils/`)
 - **Logger**: Comprehensive logging with file output
 - **Helper**: String, numeric, and validation utilities
-
-## QNX Toolchain Configuration
-
-The `toolchain_qnx_arm.cmake` file configures:
-- QNX RTOS as target platform
-- ARM Cortex-A9 architecture
-- NEON SIMD extensions
-- Hard-float ABI
-- Position-independent code generation
-
-### Environment Variables
-Set these before building:
-```bash
-export QNX_HOST=/opt/qnx700/host/linux/x86_64
-export QNX_TARGET=/opt/qnx700/target/qnx7
-```
 
 ## Example Usage
 
@@ -234,7 +213,7 @@ int main() {
 ## Compiler Flags
 
 ### Optimization Flags
-- **Release**: `-O2 -s` (optimized, stripped)
+- **Release**: `-O2 -s` (optimized, stripped on Unix-like systems)
 - **Debug**: `-g` (debug symbols)
 
 ### Security Flags
@@ -242,17 +221,23 @@ int main() {
 - `-Wall -Wextra -Wpedantic` (enhanced warnings)
 - `-Werror=unused-result` (treat unused results as errors)
 
-### Platform-Specific
-- **ARM**: `-march=armv7-a -mtune=cortex-a9 -mfpu=neon -mfloat-abi=hard`
-- **QNX**: `-D__QNX__ -D_POSIX_C_SOURCE=200809L`
-
 ## Build Configuration Options
 
 In CMakeLists.txt, you can customize:
 - `CMAKE_BUILD_TYPE`: Debug or Release
 - `CMAKE_CXX_STANDARD`: C++ standard version
+- `CMAKE_INSTALL_PREFIX`: Installation directory
 - Compiler-specific flags
 - Platform definitions
+
+## Supported Platforms
+
+| Platform | Status | Build Command |
+|----------|--------|---|
+| Windows (MSVC) | ✅ Supported | `cmake .. && cmake --build . --config Release` |
+| Linux (GCC/Clang) | ✅ Supported | `cmake .. && make` |
+| macOS (Clang) | ✅ Supported | `cmake .. && make` |
+| Unix-like Systems | ✅ Supported | `cmake .. && make` |
 
 ## Future Enhancements
 
@@ -278,11 +263,11 @@ For issues and questions, refer to the documentation or contact the development 
 - Initial release
 - Core banking functionality
 - Security features
-- QNX/ARM platform support
 - CMake build system
+- Cross-platform support (Windows, Linux, macOS, Unix)
 
 ---
 
 **Last Updated**: 2026-05-28
-**Platform**: QNX RTOS ARM / Unix-like embedded systems
+**Platform**: Cross-platform (Windows, Linux, macOS, Unix-like systems)
 **Maintainer**: Development Team
