@@ -1,10 +1,17 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.15)
 project(BankSystemEmbedded C CXX)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_FLAGS_INIT "-fPIC -Wall -Wextra")
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Enable ccache if available
+find_program(CCACHE_PROGRAM ccache)
+if(CCACHE_PROGRAM)
+    set(CMAKE_CXX_COMPILER_LAUNCHER "${CCACHE_PROGRAM}")
+    message(STATUS "Using ccache for faster rebuilds")
+endif()
 
 # Project settings
 set(BANK_SYSTEM_VERSION 1.0.0)
@@ -14,7 +21,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 
-# Add source files
+# Add source files - headers removed from executable (not needed)
 set(SOURCES
     src/main.cpp
     src/bank/Account.cpp
@@ -40,8 +47,8 @@ set(HEADERS
     include/utils/Helper.h
 )
 
-# Create executable
-add_executable(bank_system_embedded ${SOURCES} ${HEADERS})
+# Create executable - IMPROVED: removed HEADERS from add_executable
+add_executable(bank_system_embedded ${SOURCES})
 
 # Include directories
 target_include_directories(bank_system_embedded PRIVATE 
@@ -49,11 +56,24 @@ target_include_directories(bank_system_embedded PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+# Precompiled headers for faster builds
+target_precompile_headers(bank_system_embedded PRIVATE
+    <vector>
+    <map>
+    <string>
+    <memory>
+    <iostream>
+    <fstream>
+)
+
 # Compiler flags for all platforms
 if(MSVC)
-    target_compile_options(bank_system_embedded PRIVATE /W4 /WX)
+    target_compile_options(bank_system_embedded PRIVATE /W4 /WX /MP)
+    # Multi-processor compilation for MSVC
 else()
-    target_compile_options(bank_system_embedded PRIVATE -Wall -Wextra -Wpedantic -Werror=unused-result)
+    target_compile_options(bank_system_embedded PRIVATE 
+        -Wall -Wextra -Wpedantic -Werror=unused-result
+    )
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         target_compile_options(bank_system_embedded PRIVATE -ftrapv)
     endif()
@@ -62,12 +82,17 @@ endif()
 # Optimization flags
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     if(NOT MSVC)
-        target_compile_options(bank_system_embedded PRIVATE -O2 -s)
+        target_compile_options(bank_system_embedded PRIVATE -O2 -s -ffunction-sections -fdata-sections)
+        target_link_options(bank_system_embedded PRIVATE -Wl,--gc-sections)
     else()
-        target_compile_options(bank_system_embedded PRIVATE /O2)
+        target_compile_options(bank_system_embedded PRIVATE /O2 /Oi /Ot)
     endif()
 else()
-    target_compile_options(bank_system_embedded PRIVATE -g)
+    if(MSVC)
+        target_compile_options(bank_system_embedded PRIVATE /ZI)
+    else()
+        target_compile_options(bank_system_embedded PRIVATE -g -O0)
+    endif()
 endif()
 
 # Platform detection and settings
@@ -96,9 +121,10 @@ endif()
 message(STATUS "================================")
 message(STATUS "Bank System Embedded Build Info")
 message(STATUS "================================")
-message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
-message(STATUS "Compiler: ${CMAKE_CXX_COMPILER}")
-message(STATUS "C++ Standard: ${CMAKE_CXX_STANDARD}")
-message(STATUS "Version: ${BANK_SYSTEM_VERSION}")
-message(STATUS "Output: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+message(STATUS "Build Type:       ${CMAKE_BUILD_TYPE}")
+message(STATUS "Compiler:         ${CMAKE_CXX_COMPILER_ID} ${CMAKE_CXX_COMPILER_VERSION}")
+message(STATUS "C++ Standard:     ${CMAKE_CXX_STANDARD}")
+message(STATUS "Version:          ${BANK_SYSTEM_VERSION}")
+message(STATUS "Output:           ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
+message(STATUS "Ccache Available: ${CCACHE_PROGRAM}")
 message(STATUS "================================")
