@@ -1,14 +1,9 @@
 @echo off
 REM Bank System Embedded Build Script for Windows
 REM Supports both native Windows and QNX cross-compilation builds
-REM Enhanced with: incremental builds, parallel compilation, verbose mode, and build timing
+REM Enhanced with: incremental builds, parallel compilation, and verbose mode
 
 setlocal enabledelayedexpansion
-
-REM Start timer
-for /f "tokens=1-4 delims=:.," %%A in ("%time%") do (
-    set /a START_TIME=(%%A*3600000)+(%%B*60000)+(%%C*1000)+(%%D)
-)
 
 echo.
 echo ============================================
@@ -184,20 +179,6 @@ echo.
 echo ============================================
 echo Build Completed Successfully!
 echo ============================================
-
-REM Calculate elapsed time
-for /f "tokens=1-4 delims=:.," %%A in ("%time%") do (
-    set /a END_TIME=(%%A*3600000)+(%%B*60000)+(%%C*1000)+(%%D)
-)
-
-set /a ELAPSED_MS=!END_TIME!-!START_TIME!
-if %ELAPSED_MS% lss 0 set /a ELAPSED_MS=%ELAPSED_MS%+86400000
-
-set /a ELAPSED_S=!ELAPSED_MS!/1000
-set /a ELAPSED_M=!ELAPSED_S!/60
-set /a REMAINING_S=!ELAPSED_S!-(!ELAPSED_M!*60)
-
-echo Build Time: !ELAPSED_M!m !REMAINING_S!s
 echo.
 echo Output:
 echo - Executable: %INSTALL_DIR%\bin\bank_system_embedded.exe
