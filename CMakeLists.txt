@@ -70,6 +70,8 @@ target_precompile_headers(bank_system_embedded PRIVATE
 if(MSVC)
     target_compile_options(bank_system_embedded PRIVATE /W4 /WX /MP)
     # Multi-processor compilation for MSVC
+    # Disable specific warnings for MSVC compatibility
+    target_compile_options(bank_system_embedded PRIVATE /wd4996)
 else()
     target_compile_options(bank_system_embedded PRIVATE 
         -Wall -Wextra -Wpedantic -Werror=unused-result
