@@ -23,15 +23,15 @@ std::string Helper::trim(const std::string& str) {
 
 std::string Helper::toLower(const std::string& str) {
     std::string result = str;
-    std::transform(result.begin(), result.end(), result.begin(), 
-                   [](unsigned char c) { return std::tolower(c); });
+    std::transform(result.begin(), result.end(), result.begin(),
+                   [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
     return result;
 }
 
 std::string Helper::toUpper(const std::string& str) {
     std::string result = str;
     std::transform(result.begin(), result.end(), result.begin(),
-                   [](unsigned char c) { return std::toupper(c); });
+                   [](unsigned char c) { return static_cast<char>(std::toupper(c)); });
     return result;
 }
 

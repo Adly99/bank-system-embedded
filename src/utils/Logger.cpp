@@ -1,5 +1,8 @@
 #include "utils/Logger.h"
 #include <iostream>
+#include <ctime>
+#include <iomanip>
+#include <sstream>
 
 using namespace utils;
 
@@ -17,8 +20,8 @@ Logger::~Logger() {
     }
 }
 
-bool Logger::initialize(const std::string& logFile) {
-    logFilePath = logFile;
+bool Logger::initialize(const std::string& logFilePath_param) {
+    logFilePath = logFilePath_param;
     logFile.open(logFilePath, std::ios::app);
     if (!logFile.is_open()) {
         std::cerr << "Failed to open log file: " << logFilePath << std::endl;
@@ -73,10 +76,23 @@ void Logger::log(LogLevel level, const std::string& message) {
 
 std::string Logger::getTimestamp() const {
     auto now = std::time(nullptr);
-    auto tm = *std::localtime(&now);
+    struct tm tm_buf;
+    struct tm* tm = nullptr;
+    
+#ifdef _MSC_VER
+    if (localtime_s(&tm_buf, &now) == 0) {
+        tm = &tm_buf;
+    }
+#else
+    tm = localtime_r(&now, &tm_buf);
+#endif
+
+    if (!tm) {
+        return "UNKNOWN";
+    }
 
     std::ostringstream oss;
-    oss << std::put_time(&tm, "%Y-%m-%d %H:%M:%S");
+    oss << std::put_time(tm, "%Y-%m-%d %H:%M:%S");
     return oss.str();
 }
 

@@ -8,8 +8,8 @@ using namespace bank;
 using namespace utils;
 
 Customer::Customer(const std::string& id, const std::string& name,
-                   const std::string& email, CustomerType type)
-    : customerId(id), name(name), email(email), type(type),
+                   const std::string& email_param, CustomerType type)
+    : customerId(id), name(name), email(email_param), type(type),
       registrationDate(std::time(nullptr)), verified(false) {
     Logger::getInstance().info("Customer created: " + id + " (" + name + ")");
 }
@@ -63,6 +63,6 @@ bool Customer::verifyCustomer() {
     return false;
 }
 
-bool Customer::validateEmail(const std::string& email) const {
-    return Helper::isValidEmail(email);
+bool Customer::validateEmail(const std::string& email_param) const {
+    return Helper::isValidEmail(email_param);
 }

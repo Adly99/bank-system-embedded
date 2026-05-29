@@ -4,10 +4,9 @@
 #include <string>
 #include <vector>
 #include <ctime>
+#include "Transaction.h"
 
 namespace bank {
-
-class Transaction;
 
 class Account {
 public:

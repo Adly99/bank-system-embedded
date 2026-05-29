@@ -29,8 +29,8 @@ public:
     bool backup(const std::string& filename);
     bool restore(const std::string& filename);
     void clear();
-    int getCustomerCount() const { return customers.size(); }
-    int getAccountCount() const { return accounts.size(); }
+    size_t getCustomerCount() const { return customers.size(); }
+    size_t getAccountCount() const { return accounts.size(); }
 
 private:
     Database() = default;
